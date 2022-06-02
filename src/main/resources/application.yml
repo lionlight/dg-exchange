@@ -1,0 +1,54 @@
+spring:
+  profiles.active: development
+---
+spring:
+  application:
+    name: "ALFA TEST"
+  profiles: development
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+feign:
+  name: client
+  hystrix:
+    enabled: false
+  okhttp:
+    enabled: true
+app:
+  rate:
+    api-url: https://openexchangerates.org/
+    app-id: 5db496f900bd4fbe9a537911844e0b44
+    general-base: USD
+  gif:
+    api-url: api.giphy.com
+    api-key: tPCR00QmV8xyiOig7C9rbfFXvwOVg8jW
+    positive-tag: rich
+    negative-tag: broke
+---
+spring:
+  application:
+    name: "ALFA PROD"
+  profiles: production
+
+server:
+  port: <must-be-overridden>
+  servlet:
+    context-path: /api
+feign:
+  name: client
+  hystrix:
+    enabled: false
+  okhttp:
+    enabled: true
+app:
+  rate:
+    api-url: https://openexchangerates.org/
+    app-id: <must-be-overridden>
+    general-base: USD
+  gif:
+    api-url: api.giphy.com
+    api-key: <must-be-overridden>
+    positive-tag: rich
+    negative-tag: broke
