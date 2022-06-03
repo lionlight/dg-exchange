@@ -1,15 +1,13 @@
 package ru.alfa.app.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Map;
 
 @Getter
 @Setter
 @Data
+@AllArgsConstructor
 @ToString
 public class OpenEx {
     String disclaimer;

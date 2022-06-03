@@ -1,15 +1,20 @@
 package ru.alfa.app.services;
 
-import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import feign.Response;
 import lombok.Data;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Map;
+
+import static ru.alfa.app.services.enums.GiphyJsonProperties.*;
 
 @Service
 @Data
@@ -24,31 +29,34 @@ public class GiphyService {
     @Value("${app.gif.negative-tag}")
     private String negativeTag;
 
-    public String mappingToGifUrl(Response response) {
-        ArrayList<LinkedTreeMap<String, Object>> dataMap = parse(response);
-        int randomGifIndex = generateRandomInt(49, 0);
-        try {
-            LinkedTreeMap<String, Object> imagesMap = (LinkedTreeMap<String, Object>) dataMap.get(randomGifIndex).get("images");
-            LinkedTreeMap<String, Object> originalGifMap = (LinkedTreeMap<String, Object>) imagesMap.get("original");
-            return (String) originalGifMap.get("url");
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
+    private final int MAX_GIF_INDEX_PER_REQUEST = 49;
 
-        return "/";
+    public String getGifUrl(Response response) throws IOException {
+        Map<String, Object> parseResponseBodyJsonMap = parseResponseBody(IOUtils.toString(response.body().asInputStream()));
+        return getGifUrl(parseResponseBodyJsonMap);
     }
 
-    private ArrayList<LinkedTreeMap<String, Object>> parse(Response response) {
+    public String getGifUrl(Map<String, Object> map) {
+        Gson gson = new Gson();
+
+        JsonArray jsonArrayData = gson.toJsonTree(map)
+                .getAsJsonObject().get(DATA.getPropertyName()).getAsJsonArray();
+
+        JsonObject gifAsJsonObject = jsonArrayData.get(generateRandomGifIndex())
+                .getAsJsonObject().get(IMAGES.getPropertyName()).getAsJsonObject();
+
+        return gifAsJsonObject
+                .getAsJsonObject().get(ORIGINAL.getPropertyName())
+                .getAsJsonObject().get(URL.getPropertyName()).getAsString();
+    }
+
+    private Map<String, Object> parseResponseBody(String body) {
         GsonJsonParser parser = new GsonJsonParser();
-
-        Map<String, Object> jsonObjectMap = parser.parseMap(response.body().toString());
-
-        return (ArrayList<LinkedTreeMap<String, Object>>) jsonObjectMap.get("data");
+        return parser.parseMap(body);
     }
 
-    private int generateRandomInt(int max, int min) {
-        int maxGifIndex = max;
-        int minGifIndex = min;
-        return new SecureRandom().nextInt(maxGifIndex - minGifIndex) + minGifIndex;
+    private int generateRandomGifIndex() {
+        int minGifIndex = 0;
+        return new SecureRandom().nextInt(MAX_GIF_INDEX_PER_REQUEST - minGifIndex) + minGifIndex;
     }
 }
