@@ -5,16 +5,17 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtils {
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private final LocalDate date = LocalDate.now(ZoneOffset.UTC);
+    private static final LocalDate date = LocalDate.now(ZoneOffset.UTC);
 
-    public String getNowDateAsString() {
+    public static String getCurrentDateAsFormattedString() {
         return dateTimeFormatter.format(date);
     }
 
-    public String getYesterdayAsString() {
+    public static String getYesterdaysDateAsFormattedString() {
         date.minusDays(1);
         return dateTimeFormatter.format(date);
     }
+
 }
