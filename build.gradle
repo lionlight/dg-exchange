@@ -26,7 +26,7 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
     implementation 'io.github.openfeign:feign-gson:11.8'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.0'
-    testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.33.2'
 }
 
 dependencyManagement {
