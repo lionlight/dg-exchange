@@ -10,12 +10,12 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("/doc")
-@Api(value = "DocumentationController", description = "Documentation/Документация",tags = {"Documentation"})
+@Api(value = "DocumentationController", description = "Documentation/Документация", tags = {"Documentation"})
 public class DocumentationController {
 
-    @ApiOperation(value = "Documentation",notes = "get documentation")
+    @ApiOperation(value = "Documentation", notes = "get documentation")
     @GetMapping
-    public RedirectView doc(){
+    public RedirectView doc() {
         return new RedirectView("/api/swagger-ui/");
     }
 }
