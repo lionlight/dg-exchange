@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.webservices.client.AutoConfigureMockWebServiceServer;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.alfa.app.client.ExchangeRateClient;
-import ru.alfa.app.services.ExchangeRatesService;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

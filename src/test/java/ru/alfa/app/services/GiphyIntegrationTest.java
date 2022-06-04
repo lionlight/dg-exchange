@@ -3,7 +3,6 @@ package ru.alfa.app.services;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import feign.Request;
 import feign.Response;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.webservices.client.AutoConfigureMockWebServiceServer;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.alfa.app.client.GiphyClient;
-import ru.alfa.app.services.GiphyService;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.*;
