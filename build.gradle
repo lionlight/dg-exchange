@@ -7,8 +7,8 @@ plugins {
 
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = '1.11'
-targetCompatibility = '1.11'
+sourceCompatibility = 11
+targetCompatibility = 11
 
 ext {
     mainClassName = 'ru.alfa.app.Application'
