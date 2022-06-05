@@ -22,9 +22,10 @@ feign:
     enabled: false
   okhttp:
     enabled: true
+
 app:
   rate:
-    api-url: https://openexchangerates.org/
+    api-url: https://openexchangerates.org
     app-id: 5db496f900bd4fbe9a537911844e0b44
     general-base: USD
   gif:
@@ -32,6 +33,13 @@ app:
     api-key: tPCR00QmV8xyiOig7C9rbfFXvwOVg8jW
     positive-tag: rich
     negative-tag: broke
+
+static:
+  offsets:
+    - name: giphy default offset
+      value: 1000
+    - name: giphy max offset
+      value: 4990
 ---
 spring:
   application:
@@ -54,6 +62,7 @@ feign:
     enabled: false
   okhttp:
     enabled: true
+
 app:
   rate:
     api-url: <must-be-overridden>
@@ -64,6 +73,13 @@ app:
     api-key: <must-be-overridden>
     positive-tag: <must-be-overridden>
     negative-tag: <must-be-overridden>
+
+static:
+  offsets:
+    - name: giphy default offset
+      value: 1000
+    - name: giphy max offset
+      value: 4990
 ---
 spring:
   application:
@@ -86,9 +102,10 @@ feign:
     enabled: false
   okhttp:
     enabled: true
+
 app:
   rate:
-    api-url: https://openexchangerates.org/
+    api-url: https://openexchangerates.org
     app-id: 5db496f900bd4fbe9a537911844e0b44
     general-base: USD
   gif:
@@ -96,3 +113,10 @@ app:
     api-key: tPCR00QmV8xyiOig7C9rbfFXvwOVg8jW
     positive-tag: rich
     negative-tag: broke
+
+static:
+  offsets:
+    - name: giphy default offset
+      value: 1000
+    - name: giphy max offset
+      value: 4990
