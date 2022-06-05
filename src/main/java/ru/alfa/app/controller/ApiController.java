@@ -12,16 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.alfa.app.client.ExchangeRateClient;
 import ru.alfa.app.client.GiphyClient;
-import ru.alfa.app.model.Rate;
 import ru.alfa.app.services.ExchangeRatesService;
 import ru.alfa.app.services.GiphyService;
 
 import java.io.IOException;
-import java.util.Locale;
-
-import static ru.alfa.app.services.enums.OpenExchangeRatesTickers.valueOf;
-import static ru.alfa.app.utils.DateUtils.getCurrentDateAsFormattedString;
-import static ru.alfa.app.utils.DateUtils.getYesterdaysDateAsFormattedString;
 
 @RestController
 @RequestMapping("/v1/")
@@ -30,7 +24,7 @@ import static ru.alfa.app.utils.DateUtils.getYesterdaysDateAsFormattedString;
 @Api(value = "ApiController", description = "Output the result/Выдать результат", tags = {"ApiController"})
 public class ApiController {
 
-    public static final String API_V_1_REDIRECT_URL = "/api/v1/gifs";
+    public static final String API_V_1_REDIRECT_TO_GIPHY = "/api/v1/gifs?tag=";
     private GiphyClient giphyClient;
     private ExchangeRateClient exchangeRateClient;
     private ExchangeRatesService exchangeRatesService;
@@ -42,44 +36,16 @@ public class ApiController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public RedirectView getRates(String base) throws IOException {
+        exchangeRatesService.sendRequestFromClient(exchangeRateClient);
 
-        final String APP_ID = exchangeRatesService.getAppId();
-        final String GENERAL_BASE = exchangeRatesService.getGeneralBase();
+        boolean isRich = exchangeRatesService.compareTwoRates(base);
 
-        final String nowDate = getCurrentDateAsFormattedString();
-        final String yesterdayDate = getYesterdaysDateAsFormattedString();
+        log.info("Redirect to " + API_V_1_REDIRECT_TO_GIPHY);
 
-        var now = exchangeRateClient.getRates(nowDate + ".json", APP_ID, GENERAL_BASE);
-
-        String clientNameRequestWithNowDate = now.request().requestTemplate().feignTarget().name();
-
-        log.info(clientNameRequestWithNowDate
-                + " send request to "
-                + exchangeRatesService.getServiceUrl()
-                + " with now date: ");
-
-        var yesterday = exchangeRateClient.getRates(yesterdayDate + ".json", APP_ID, GENERAL_BASE);
-
-        String clientNameRequestWithYesterdayDate = yesterday.request().requestTemplate().feignTarget().name();
-
-        log.info(clientNameRequestWithYesterdayDate
-                + " send request to "
-                + exchangeRatesService.getServiceUrl()
-                + " with yesterday date (for compare rates): ");
-
-        final Rate nowRate = exchangeRatesService.getRate(now, valueOf(base.toUpperCase(Locale.ROOT)));
-        final Rate yesterdayRate = exchangeRatesService.getRate(yesterday, valueOf(base.toUpperCase(Locale.ROOT)));
-
-        String redirectQuery = "?tag=";
-
-        if (exchangeRatesService.isNowRateGreatest(nowRate, yesterdayRate)) {
-            log.info("Redirect to " + API_V_1_REDIRECT_URL);
-
-            return new RedirectView(API_V_1_REDIRECT_URL + redirectQuery + giphyService.getPositiveTag());
+        if (isRich) {
+            return new RedirectView(API_V_1_REDIRECT_TO_GIPHY + giphyService.getPositiveTag());
         } else {
-            log.info("Redirect to " + API_V_1_REDIRECT_URL);
-
-            return new RedirectView(API_V_1_REDIRECT_URL + redirectQuery + giphyService.getNegativeTag());
+            return new RedirectView(API_V_1_REDIRECT_TO_GIPHY + giphyService.getNegativeTag());
         }
     }
 
@@ -89,9 +55,17 @@ public class ApiController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public RedirectView getGifs(@RequestParam String tag) throws IOException {
-        var response = giphyClient.getGif(giphyService.getApiKey(), tag);
-        log.info("Client send request to " + giphyService.getServiceUrl());
-        return new RedirectView(giphyService.getGifUrl(response));
+        String apiKey = giphyService.getApiKey();
+        int offset = giphyService.generateOffset();
+
+        var response = giphyClient.getGif(apiKey, tag, offset);
+
+        String redirectUrl = giphyService.getGifUrl(response);
+
+        String serviceUrl = giphyService.getServiceUrl();
+        log.info("Client send request to " + serviceUrl);
+
+        return new RedirectView(redirectUrl);
     }
 
 }

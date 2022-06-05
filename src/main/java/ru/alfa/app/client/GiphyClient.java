@@ -18,6 +18,7 @@ public interface GiphyClient {
     @RequestMapping(method = RequestMethod.GET,
             value = "/v1/gifs/search")
     Response getGif(@RequestParam("api_key") String apiKey,
-                    @RequestParam("q") String tag);
+                    @RequestParam("q") String tag,
+                    @RequestParam("offset") int offset);
 
 }
