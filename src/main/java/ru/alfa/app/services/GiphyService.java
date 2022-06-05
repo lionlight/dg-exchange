@@ -6,14 +6,18 @@ import com.google.gson.JsonObject;
 import feign.Response;
 import lombok.Getter;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.alfa.app.services.enums.GiphyJsonProperties;
+import ru.alfa.app.utils.constants.OffsetConstant;
+import ru.alfa.app.utils.constants.OffsetConstantsProperties;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SecureRandom;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 @Getter
@@ -33,6 +37,11 @@ public class GiphyService extends AbstractService {
 
     private final int MAX_GIF_INDEX_PER_REQUEST = 49;
 
+    @Autowired
+    private OffsetConstantsProperties offsetConstantsProperties;
+
+    private int offset;
+
     public String getGifUrl(Response response) throws IOException {
         Map<String, Object> parseResponseBodyJsonMap;
         try (InputStream bodyInputStream = response.body().asInputStream()) {
@@ -42,6 +51,17 @@ public class GiphyService extends AbstractService {
             return getGifUrl(parseResponseBodyJsonMap);
         }
         return "v1/error";
+    }
+
+    public int generateOffset() {
+        offset = new Random().nextInt(
+                offsetConstantsProperties.getOffsets()
+                        .stream()
+                        .filter(o -> o.getName().equals("giphy default offset"))
+                        .findFirst().orElse(new OffsetConstant("giphy minimum default", 1))
+                        .getValue());
+
+        return offset;
     }
 
     public String getGifUrl(Map<String, Object> map) {
