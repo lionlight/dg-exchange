@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConstructorBinding
 @AllArgsConstructor
 @Getter
-public class OffsetConstants {
+public class OffsetConstant {
     private final String name;
     private final int value;
 }

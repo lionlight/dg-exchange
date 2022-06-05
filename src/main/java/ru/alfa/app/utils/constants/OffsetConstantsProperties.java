@@ -11,9 +11,9 @@ import java.util.List;
 public class OffsetConstantsProperties {
 
     @Getter
-    private final List<OffsetConstants> offsets;
+    private final List<OffsetConstant> offsets;
 
-    public OffsetConstantsProperties(List<OffsetConstants> offsets) {
+    public OffsetConstantsProperties(List<OffsetConstant> offsets) {
         this.offsets = offsets;
     }
 
