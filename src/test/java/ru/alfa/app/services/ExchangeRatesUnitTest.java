@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.alfa.app.model.Rate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class ExchangeRatesUnitTest {
@@ -48,8 +49,8 @@ class ExchangeRatesUnitTest {
         assertFalse(exchangeRatesService.isNowRateGreatest(now, yesterday));
     }
 
-    @Test
-    void getBase() {
-        assertEquals("USD",exchangeRatesService.getBase());
-    }
+//    @Test
+//    void getBase() {
+//        assertEquals("USD",exchangeRatesService.getBase());
+//    }
 }

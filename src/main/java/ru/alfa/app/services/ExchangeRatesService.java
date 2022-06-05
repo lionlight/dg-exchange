@@ -7,17 +7,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.alfa.app.client.ExchangeRateClient;
 import ru.alfa.app.model.Rate;
 import ru.alfa.app.services.enums.OpenExchangeRatesTickers;
+import ru.alfa.app.utils.DateUtils;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Double.parseDouble;
 import static ru.alfa.app.services.enums.OpenExchangeRatesJsonProperties.RATES;
+import static ru.alfa.app.services.enums.OpenExchangeRatesTickers.valueOf;
+import static ru.alfa.app.utils.DateUtils.getYesterdaysDateAsFormattedString;
 
 @Service
-@Getter
 @Slf4j
 public class ExchangeRatesService extends AbstractService {
 
@@ -29,21 +32,78 @@ public class ExchangeRatesService extends AbstractService {
 
     @Value("${app.rate.general-base}")
     private String base;
+    @Getter
+    private Map<String, Response> responses;
+    private List<Rate> rates;
 
-    public boolean isNowRateGreatest(Rate now, Rate yesterday) {
-        if (now != null && yesterday != null)
-            return now.getValue() > yesterday.getValue();
+    private List<String> getFormattedDateList() {
+        String CURRENT_DATE = DateUtils.getCurrentDateAsFormattedString();
+        String YESTERDAY_DATE = getYesterdaysDateAsFormattedString();
+
+        List<String> yesterdayAndCurrentFormattedDateList = new ArrayList<>();
+        yesterdayAndCurrentFormattedDateList.add(CURRENT_DATE);
+        yesterdayAndCurrentFormattedDateList.add(YESTERDAY_DATE);
+
+        return yesterdayAndCurrentFormattedDateList;
+    }
+
+    private void sendRequestFromClient(final ExchangeRateClient client, final String date, final String key) {
+        final String APP_ID = getAppId();
+        final String GENERAL_BASE = getGeneralBase();
+
+        var response = client.getRates(date + ".json", APP_ID, GENERAL_BASE);
+
+        responses.put(key, response);
+    }
+
+    public void sendRequestFromClient(final ExchangeRateClient client) {
+        responses = new HashMap<>();
+        List<String> strings = getFormattedDateList();
+
+        final String current = "current";
+        final String yesterday = "yesterday";
+
+        for (int i = 0; i < strings.size(); i++) {
+            final String key = i == 0 ? current : yesterday; //two requests (current, yesterday)
+            sendRequestFromClient(client, strings.get(i), key);
+        }
+
+    }
+
+    private void getTwoRates(String base) throws IOException {
+        rates = new ArrayList<>();
+
+        for (Map.Entry<String, Response> entry : responses.entrySet()) {
+            rates.add(getRate(entry.getValue(), valueOf(base.toUpperCase(Locale.ROOT))));
+            String clientName = entry.getValue().request().requestTemplate().feignTarget().name();
+            log.info(clientName
+                    + " send request to "
+                    + serviceUrl
+                    + " with now date: ");
+        }
+    }
+
+    public boolean compareTwoRates(String base) throws IOException {
+        getTwoRates(base);
+        Rate current = rates.get(0);
+        Rate yesterday = rates.get(1);
+        return isNowRateGreatest(current, yesterday);
+    }
+
+    boolean isNowRateGreatest(Rate current, Rate yesterday) {
+        if (current != null && yesterday != null)
+            return current.getValue() > yesterday.getValue();
         else return false;
     }
 
-    public Rate getRate(Response response, OpenExchangeRatesTickers rateType) throws IOException {
+    private Rate getRate(Response response, OpenExchangeRatesTickers rateType) throws IOException {
         Map<String, Object> parseResponseBodyJsonMap =
                 parseResponseBody(IOUtils.toString(response.body().asInputStream()));
 
-        return getRate(parseResponseBodyJsonMap, rateType);
+        return getRateFromJsonMap(parseResponseBodyJsonMap, rateType);
     }
 
-    public Rate getRate(Map<String, Object> map, OpenExchangeRatesTickers rateType) {
+    private Rate getRateFromJsonMap(Map<String, Object> map, OpenExchangeRatesTickers rateType) {
         Gson gson = new Gson();
 
         String rateValue = gson.toJsonTree(map)
