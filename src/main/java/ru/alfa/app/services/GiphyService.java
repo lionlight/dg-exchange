@@ -9,6 +9,8 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.alfa.app.dto.giphy.GifsDTO;
+import ru.alfa.app.dto.giphy.data.image.Images;
 import ru.alfa.app.services.enums.GiphyJsonProperties;
 import ru.alfa.app.utils.constants.OffsetConstant;
 import ru.alfa.app.utils.constants.OffsetConstantsProperties;
@@ -28,12 +30,6 @@ public class GiphyService extends AbstractService {
 
     @Value("${app.gif.api-key}")
     private String apiKey;
-
-    @Value("${app.gif.positive-tag}")
-    private String positiveTag;
-
-    @Value("${app.gif.negative-tag}")
-    private String negativeTag;
 
     private final int MAX_GIF_INDEX_PER_REQUEST = 49;
 
@@ -76,6 +72,10 @@ public class GiphyService extends AbstractService {
         return gifAsJsonObject
                 .getAsJsonObject().get(GiphyJsonProperties.ORIGINAL.getPropertyName())
                 .getAsJsonObject().get(GiphyJsonProperties.URL.getPropertyName()).getAsString();
+    }
+
+    public Images getGifUrl(GifsDTO gifsDTO) {
+        return gifsDTO.getData().get(generateRandomGifIndex()).getImages();
     }
 
     private int generateRandomGifIndex() {

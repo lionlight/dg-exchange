@@ -8,8 +8,6 @@ spring:
 
 server:
   port: 8080
-  servlet:
-    context-path: /api
 
 service:
   integration-test:
@@ -26,7 +24,7 @@ feign:
 app:
   rate:
     api-url: https://openexchangerates.org
-    app-id: 5db496f900bd4fbe9a537911844e0b44
+    app-id: 36ea29b7bc80419dafe4ba9632075e95
     general-base: USD
   gif:
     api-url: http://api.giphy.com

@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.alfa.app.model.Rate;
+import ru.alfa.app.dto.dgexchange.Rate;
+
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,10 +28,12 @@ class ExchangeRatesUnitTest {
     @Test
     void isNowRateGreatest_True() {
         Rate now = new Rate();
+        now.setTimestamp(String.valueOf(Instant.now().toEpochMilli()));
         now.setTicker("RUB");
         now.setValue(62);
 
         Rate yesterday = new Rate();
+        yesterday.setTimestamp(String.valueOf(Instant.now().toEpochMilli()));
         yesterday.setTicker("RUB");
         yesterday.setValue(61);
 
@@ -48,9 +52,4 @@ class ExchangeRatesUnitTest {
 
         assertFalse(exchangeRatesService.isNowRateGreatest(now, yesterday));
     }
-
-//    @Test
-//    void getBase() {
-//        assertEquals("USD",exchangeRatesService.getBase());
-//    }
 }

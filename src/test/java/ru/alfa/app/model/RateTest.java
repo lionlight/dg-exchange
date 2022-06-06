@@ -2,6 +2,7 @@ package ru.alfa.app.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.alfa.app.dto.dgexchange.Rate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -11,7 +12,7 @@ class RateTest {
 
     @BeforeEach
     void configure() {
-        rate = new Rate("RUB", 61.0);
+        rate = new Rate("1000", "RUB", 61.0);
     }
 
     @Test

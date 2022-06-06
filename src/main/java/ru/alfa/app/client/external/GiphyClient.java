@@ -1,4 +1,4 @@
-package ru.alfa.app.client;
+package ru.alfa.app.client.external;
 
 
 import feign.Response;
@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.alfa.app.client.config.ClientConfiguration;
+import ru.alfa.app.dto.giphy.GifsDTO;
 
 @FeignClient(
         value = "giphy-client",
@@ -17,8 +18,8 @@ public interface GiphyClient {
 
     @RequestMapping(method = RequestMethod.GET,
             value = "/v1/gifs/search")
-    Response getGif(@RequestParam("api_key") String apiKey,
-                    @RequestParam("q") String tag,
-                    @RequestParam("offset") int offset);
+    GifsDTO getGif(@RequestParam("api_key") String apiKey,
+                   @RequestParam("q") String tag,
+                   @RequestParam("offset") int offset);
 
 }

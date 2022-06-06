@@ -9,8 +9,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 
 @RestController
-@RequestMapping("/v1/")
-@Api(value = "DocumentationController", description = "Documentation/Документация", tags = {"Documentation"})
+@RequestMapping("api/v1/")
+@Api(value = "DocumentationController", tags = {"Documentation"})
 public class DocumentationController {
 
     @ApiOperation(value = "Documentation", notes = "get documentation")

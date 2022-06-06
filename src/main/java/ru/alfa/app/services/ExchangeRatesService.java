@@ -1,22 +1,18 @@
 package ru.alfa.app.services;
 
-import com.google.gson.Gson;
-import feign.Response;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.alfa.app.client.ExchangeRateClient;
-import ru.alfa.app.model.Rate;
+import ru.alfa.app.client.external.ExchangeRateClient;
+import ru.alfa.app.dto.dgexchange.Rate;
+import ru.alfa.app.dto.openexchange.OpenExchangeDTO;
 import ru.alfa.app.services.enums.OpenExchangeRatesTickers;
 import ru.alfa.app.utils.DateUtils;
 
 import java.io.IOException;
 import java.util.*;
 
-import static java.lang.Double.parseDouble;
-import static ru.alfa.app.services.enums.OpenExchangeRatesJsonProperties.RATES;
 import static ru.alfa.app.services.enums.OpenExchangeRatesTickers.valueOf;
 import static ru.alfa.app.utils.DateUtils.getYesterdaysDateAsFormattedString;
 
@@ -33,23 +29,23 @@ public class ExchangeRatesService extends AbstractService {
     @Value("${app.rate.general-base}")
     private String generalBase;
     @Getter
-    private Map<String, Response> responses;
+    private Map<String, OpenExchangeDTO> responses;
     private List<Rate> rates;
 
     public void sendRequestFromClient(final ExchangeRateClient client) {
         responses = new HashMap<>();
-        List<String> strings = getFormattedDateList();
+        List<String> dates = getFormattedDateList();
 
         final String current = "current";
         final String yesterday = "yesterday";
 
-        for (int i = 0; i < strings.size(); i++) {
+        for (int i = 0; i < dates.size(); i++) {
             final String key = i == 0 ? current : yesterday; //two requests (current, yesterday)
-            send(client, strings.get(i), key);
+            send(client, dates.get(i), key);
         }
     }
 
-    public boolean compareTwoRates(String base) throws IOException {
+    public boolean compareTwoRates(String base) {
         getTwoRates(base);
         Rate current = Objects.requireNonNull(rates.get(0));
         Rate yesterday = Objects.requireNonNull(rates.get(1));
@@ -90,39 +86,23 @@ public class ExchangeRatesService extends AbstractService {
         return yesterdayAndCurrentFormattedDateList;
     }
 
-    private void getTwoRates(String base) throws IOException {
+    private void getTwoRates(String base) {
         rates = new ArrayList<>();
 
-        for (Map.Entry<String, Response> entry : responses.entrySet()) {
+        for (Map.Entry<String, OpenExchangeDTO> entry : responses.entrySet()) {
             rates.add(getRate(entry.getValue(), valueOf(base.toUpperCase(Locale.ROOT))));
-            String clientName = entry.getValue().request().requestTemplate().feignTarget().name();
-            log.info(clientName
-                    + " send request to "
-                    + serviceUrl
-                    + " with now date: ");
         }
     }
 
-    private Rate getRate(Response response, OpenExchangeRatesTickers rateType) throws IOException {
-        Map<String, Object> parseResponseBodyJsonMap =
-                parseResponseBody(IOUtils.toString(response.body().asInputStream()));
-
-        return getRateFromJsonMap(parseResponseBodyJsonMap, rateType);
+    public Rate getRate(OpenExchangeDTO response, OpenExchangeRatesTickers rateType) {
+        return getRateFromJson(response, rateType);
     }
 
-    private Rate getRateFromJsonMap(Map<String, Object> map, OpenExchangeRatesTickers rateType) {
-        Gson gson = new Gson();
-
-        String rateValue = gson.toJsonTree(map)
-                .getAsJsonObject()
-                .get(RATES.getPropertyName())
-                .getAsJsonObject()
-                .get(rateType.getRateTypeName()).getAsString();
-
+    private Rate getRateFromJson(OpenExchangeDTO response, OpenExchangeRatesTickers rateType) {
         Rate rate = new Rate();
+        rate.setTimestamp(response.getTimestamp());
         rate.setTicker(rateType.getRateTypeName());
-        rate.setValue(parseDouble(rateValue));
-
+        rate.setValue(response.getRates().get(String.valueOf(rateType)));
         return rate;
     }
 }
