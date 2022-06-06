@@ -16,6 +16,6 @@ public class DocumentationController {
     @ApiOperation(value = "Documentation", notes = "get documentation")
     @GetMapping("/doc")
     public RedirectView doc() {
-        return new RedirectView("/api/swagger-ui/");
+        return new RedirectView("/swagger-ui/");
     }
 }

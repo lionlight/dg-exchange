@@ -21,7 +21,6 @@ public class ClientController {
     private final DGExchangeService dgExchangeService;
     private final DGGifService dgGifService;
 
-    @ApiIgnore
     @GetMapping("/gifs")
     public ModelAndView getGif(String code) throws Exception {
 
