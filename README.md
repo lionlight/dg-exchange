@@ -62,7 +62,8 @@ docker run -d -p 8080:8080 --name dg-exchange-container -it --env-file ./env.lis
 http://localhost:8080/api/v1/doc
 ```
 **Now you see swagger api documentation like this:**
-![screenshot-localhost_8080-2022 06 04-14_07_49](https://user-images.githubusercontent.com/88512563/171995837-650883da-1bbf-4afc-9180-799d28fd97c5.png)
+![2022-06-06_17-21-08](https://user-images.githubusercontent.com/88512563/172168868-c5dff6b5-0d06-44b5-bc64-a90eebddac69.png)
+
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;
 - **Open in browser (or via swagger /api/v1/doc) /rates endpoint with parameter**
@@ -70,13 +71,32 @@ http://localhost:8080/api/v1/doc
 &nbsp;&nbsp;&nbsp;&nbsp;
 
 **Parameters:**
+- **code=( USD/RUB and etc currency tickers )**
+```
+http://localhost:8080/dgexchange/gifs?code=RUB
+```
+**Now you can see random gif with specialized tag :money_with_wings:**
+![2022-06-06_17-17-14](https://user-images.githubusercontent.com/88512563/172168239-16946a98-261d-455a-a3e9-f30720464cdc.png)
+
+
+<br><br>
+
+**API**
+- **tag=( rich/broke and etc tags for search gifs)**
+```
+http://localhost:8080/api/v1/gifs?tag=rich
+```
+**Now you can see api response json with different links of the same gif*
+![2022-06-06_17-11-13](https://user-images.githubusercontent.com/88512563/172167409-57d70e2d-3360-4c18-92f7-c261ad1a462f.png)
+
 - **base=( USD/RUB and etc currency tickers )**
 ```
 http://localhost:8080/api/v1/rates?base=RUB
 ```
-**Now you can see random gif with specialized tag :money_with_wings:**
-![2022-06-04_15-04-23](https://user-images.githubusercontent.com/88512563/171996351-1b002dd3-4fac-42c7-945d-85fc9d60b25c.png)
+**Now you can see api response json with different currency value response (current/yesterday)*
+![2022-06-06_17-12-54](https://user-images.githubusercontent.com/88512563/172168061-17b54f17-f9b1-42b8-9948-afde1fd473fe.png)
 
-<br><br>
+
+
 
 
