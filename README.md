@@ -62,7 +62,8 @@ docker run -d -p 8080:8080 --name dg-exchange-container -it --env-file ./env.lis
 http://localhost:8080/api/v1/doc
 ```
 **Now you see swagger api documentation like this:**
-![screenshot-localhost_8080-2022 06 04-14_07_49](https://user-images.githubusercontent.com/88512563/171995837-650883da-1bbf-4afc-9180-799d28fd97c5.png)
+![2022-06-06_17-21-08](https://user-images.githubusercontent.com/88512563/172168868-c5dff6b5-0d06-44b5-bc64-a90eebddac69.png)
+
 &nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;
 - **Open in browser (or via swagger /api/v1/doc) /rates endpoint with parameter**
