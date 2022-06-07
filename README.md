@@ -15,8 +15,6 @@
 &nbsp;&nbsp;&nbsp;&nbsp;
 **Testing:** <br>
 &nbsp;&nbsp;&nbsp;&nbsp;
-[*WireMock*](https://wiremock.org/docs) <br>
-&nbsp;&nbsp;&nbsp;&nbsp;
 [*Mockito*](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html) <br>
 &nbsp;&nbsp;&nbsp;&nbsp;
 [*Junit 5*](https://junit.org/junit5/docs/current/user-guide/) <br>
