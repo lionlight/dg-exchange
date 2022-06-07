@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.alfa.app.client.external.ExchangeRateClient;
-import ru.alfa.app.dto.dgexchange.DGExchangeDTO;
-import ru.alfa.app.dto.dgexchange.Rate;
-import ru.alfa.app.dto.openexchange.OpenExchangeDTO;
+import ru.alfa.app.dto.internal.dgexchange.DGExchangeDTO;
+import ru.alfa.app.dto.internal.dgexchange.Rate;
+import ru.alfa.app.dto.external.openexchange.OpenExchangeDTO;
 import ru.alfa.app.services.enums.OpenExchangeRatesTickers;
 import ru.alfa.app.utils.DateUtils;
 

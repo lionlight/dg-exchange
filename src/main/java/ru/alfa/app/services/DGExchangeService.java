@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.alfa.app.client.internal.DGExchangeClient;
-import ru.alfa.app.dto.dgexchange.DGExchangeDTO;
-import ru.alfa.app.dto.dgexchange.Rate;
+import ru.alfa.app.dto.internal.dgexchange.DGExchangeDTO;
+import ru.alfa.app.dto.internal.dgexchange.Rate;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;

@@ -1,13 +1,12 @@
 package ru.alfa.app.client.external;
 
 
-import feign.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.alfa.app.client.config.ClientConfiguration;
-import ru.alfa.app.dto.giphy.GifsDTO;
+import ru.alfa.app.dto.external.giphy.GifsDTO;
 
 @FeignClient(
         value = "giphy-client",

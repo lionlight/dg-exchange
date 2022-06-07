@@ -2,7 +2,7 @@ package ru.alfa.app.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.alfa.app.dto.dgexchange.Rate;
+import ru.alfa.app.dto.internal.dgexchange.Rate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

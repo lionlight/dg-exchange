@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.alfa.app.dto.dgexchange.Rate;
+import ru.alfa.app.dto.internal.dgexchange.Rate;
 
 import java.time.Instant;
 

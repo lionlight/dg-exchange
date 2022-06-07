@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import ru.alfa.app.dto.internal.dgexchange.DGGifDTO;
 import ru.alfa.app.services.DGExchangeService;
 import ru.alfa.app.services.DGGifService;
 import springfox.documentation.annotations.ApiIgnore;
@@ -26,7 +27,9 @@ public class ClientController {
 
         String tag = dgExchangeService.getTag(code);
 
-        String gifUrl = dgGifService.getGifUrl(tag);
+        DGGifDTO gifDTO = dgGifService.getGifUrl(tag);
+
+        String gifUrl = gifDTO.getOriginal().getUrl();
 
         ModelAndView modelAndView = new ModelAndView("gifs");
         modelAndView.addObject("gif", gifUrl);
