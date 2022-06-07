@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.alfa.app.client.external.ExchangeRateClient;
 import ru.alfa.app.client.external.GiphyClient;
-import ru.alfa.app.dto.dgexchange.DGExchangeDTO;
-import ru.alfa.app.dto.giphy.GifsDTO;
-import ru.alfa.app.dto.giphy.data.image.Images;
-import ru.alfa.app.dto.openexchange.OpenExchangeDTO;
+import ru.alfa.app.dto.internal.dgexchange.DGExchangeDTO;
+import ru.alfa.app.dto.external.giphy.GifsDTO;
+import ru.alfa.app.dto.external.giphy.data.image.Images;
+import ru.alfa.app.dto.external.openexchange.OpenExchangeDTO;
 import ru.alfa.app.services.ExchangeRatesService;
 import ru.alfa.app.services.GiphyService;
 

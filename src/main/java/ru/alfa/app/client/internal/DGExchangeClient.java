@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import ru.alfa.app.dto.dgexchange.DGExchangeDTO;
+import ru.alfa.app.dto.internal.dgexchange.DGExchangeDTO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
