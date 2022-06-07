@@ -19,10 +19,9 @@ class DocumentationControllerTest {
 
     @Test
     void docTest_RedirectView() throws Exception {
-
         mockMvc.perform(get("/api/v1/doc"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/api/swagger-ui/"));
+                .andExpect(redirectedUrl("/swagger-ui/"));
     }
 }

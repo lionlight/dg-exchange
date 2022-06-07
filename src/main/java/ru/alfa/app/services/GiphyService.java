@@ -38,17 +38,6 @@ public class GiphyService extends AbstractService {
 
     private int offset;
 
-    public String getGifUrl(Response response) throws IOException {
-        Map<String, Object> parseResponseBodyJsonMap;
-        try (InputStream bodyInputStream = response.body().asInputStream()) {
-            parseResponseBodyJsonMap = parseResponseBody(IOUtils.toString(bodyInputStream));
-        }
-        if (parseResponseBodyJsonMap != null) {
-            return getGifUrl(parseResponseBodyJsonMap);
-        }
-        return "v1/error";
-    }
-
     public int generateOffset() {
         offset = new Random().nextInt(
                 offsetConstantsProperties.getOffsets()
@@ -74,11 +63,11 @@ public class GiphyService extends AbstractService {
                 .getAsJsonObject().get(GiphyJsonProperties.URL.getPropertyName()).getAsString();
     }
 
-    public Images getGifUrl(GifsDTO gifsDTO) {
+    public Images getImage(GifsDTO gifsDTO) {
         return gifsDTO.getData().get(generateRandomGifIndex()).getImages();
     }
 
-    private int generateRandomGifIndex() {
+    public int generateRandomGifIndex() {
         int minGifIndex = 0;
         return new SecureRandom().nextInt(MAX_GIF_INDEX_PER_REQUEST - minGifIndex) + minGifIndex;
     }

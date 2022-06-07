@@ -15,17 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.alfa.app.client.external.ExchangeRateClient;
 import ru.alfa.app.client.external.GiphyClient;
 import ru.alfa.app.dto.dgexchange.DGExchangeDTO;
-import ru.alfa.app.dto.dgexchange.Rate;
 import ru.alfa.app.dto.giphy.GifsDTO;
 import ru.alfa.app.dto.giphy.data.image.Images;
+import ru.alfa.app.dto.openexchange.OpenExchangeDTO;
 import ru.alfa.app.services.ExchangeRatesService;
 import ru.alfa.app.services.GiphyService;
-import ru.alfa.app.services.enums.OpenExchangeRatesTickers;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Map;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -36,37 +32,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @Api(value = "ApiController", tags = {"ApiController"})
 public class ApiController {
+
+    public static String URL = "/api/v1";
     private final GiphyClient giphyClient;
     private final ExchangeRateClient exchangeRateClient;
     private final ExchangeRatesService exchangeRatesService;
     private final GiphyService giphyService;
-    private static final AtomicLong atomicLong = new AtomicLong();
 
     @ApiOperation(value = "rate from openexhcangerates api")
     @GetMapping(value = "/rates",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public EntityModel<DGExchangeDTO> getRates(String base) {
-        exchangeRatesService.sendRequestFromClient(exchangeRateClient);
+        Map<String, OpenExchangeDTO> responses = exchangeRatesService.sendRequestFromClient(exchangeRateClient);
 
-        long timestamp = Instant.now().toEpochMilli();
-
-        var responseYesterday = exchangeRatesService.getResponses().get("yesterday");
-        var responseCurrent = exchangeRatesService.getResponses().get("current");
-
-        var rateYesterday = exchangeRatesService.getRate(responseYesterday, OpenExchangeRatesTickers.valueOf(base));
-        var rateCurrent = exchangeRatesService.getRate(responseCurrent, OpenExchangeRatesTickers.valueOf(base));
-
-        List<Rate> rates = new ArrayList<>();
-
-        rates.add(rateYesterday);
-        rates.add(rateCurrent);
-
-        DGExchangeDTO responseDTO = new DGExchangeDTO();
-        responseDTO.setId(atomicLong.incrementAndGet());
-
-        responseDTO.setTimestamp(timestamp);
-        responseDTO.setRates(rates);
+        DGExchangeDTO responseDTO = exchangeRatesService.getTwoRates(responses, base);
 
         return EntityModel.of(responseDTO,
                         linkTo(methodOn(ApiController.class).getRates(base)).withSelfRel())
@@ -85,7 +65,7 @@ public class ApiController {
 
         GifsDTO gif = giphyClient.getGif(apiKey, tag, offset);
 
-        return EntityModel.of(giphyService.getGifUrl(gif),
+        return EntityModel.of(giphyService.getImage(gif),
                         linkTo(methodOn(ApiController.class).getGifs(tag)).withSelfRel())
                 .add(Link.of("/api/v1/").withRel("all").withName("all api endpoints"),
                         Link.of("/api/v1/rates").withRel("rates").withName("rates endpoint").withType("GET"),

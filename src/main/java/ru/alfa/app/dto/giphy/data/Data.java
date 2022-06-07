@@ -1,9 +1,11 @@
 package ru.alfa.app.dto.giphy.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import ru.alfa.app.dto.giphy.data.image.Images;
 
 @lombok.Data
+@Builder
 public class Data {
     private String type;
     private String id;
